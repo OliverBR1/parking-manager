@@ -3,7 +3,7 @@ services:
     image: cfontes0estapar/garage-sim:1.0.0
     container_name: garage-simulator
     ports:
-      - "3003:3000"
+      - "3004:3000"   # Simulador agora roda na 3000 interna → 3004 externa
     networks:
       - parking-net
 
@@ -11,12 +11,12 @@ services:
     build: .
     container_name: parking-manager
     ports:
-      - "3000:3000"
+      - "3003:3003"
     environment:
+      SERVER_PORT: 3003
       SPRING_DATASOURCE_URL: jdbc:mysql://parking-mysql:3306/parkingdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: admin123
-
       SIMULATOR_BASE_URL: http://garage-simulator:3000
     depends_on:
       - parking-mysql
