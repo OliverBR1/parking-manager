@@ -1,6 +1,29 @@
-version: "3.9"
-
 services:
+  garage-simulator:
+    image: cfontes0estapar/garage-sim:1.0.0
+    container_name: garage-simulator
+    ports:
+      - "3003:3000"    # ← simulador roda na porta 3000 INTERNAMENTE
+    networks:
+      - parking-net
+
+  parking-manager:
+    build: .
+    container_name: parking-manager
+    ports:
+      - "3000:3000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://parking-mysql:3306/parkingdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: admin123
+
+      # CORRETO → baseURL apontando para a porta interna REAL do simulador
+      SIMULATOR_BASE_URL: http://garage-simulator:3000
+    depends_on:
+      - parking-mysql
+      - garage-simulator
+    networks:
+      - parking-net
 
   parking-mysql:
     image: mysql:8.0
@@ -11,39 +34,8 @@ services:
       MYSQL_DATABASE: parkingdb
     ports:
       - "3307:3306"
-    command: --default-authentication-plugin=mysql_native_password
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
-      retries: 10
-
-  parking-manager:
-    build: .
-    container_name: parking-manager
-    restart: always
-    depends_on:
-      parking-mysql:
-        condition: service_healthy
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-    ports:
-      - "3003:3003"
-    # app conversa com MySQL e simulador dentro da rede
-    networks:
-      - parking-net
-
-  garage-simulator:
-    container_name: garage-simulator
-    image: cfontes0estapar/garage-sim:1.0.0
-    restart: always
-    depends_on:
-      - parking-manager
-    environment:
-      WEBHOOK_URL: http://parking-manager:3003/webhook
-      EXTERNAL_API_URL: http://parking-manager:3003/webhook
     networks:
       - parking-net
 
 networks:
   parking-net:
-    driver: bridge

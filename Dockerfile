@@ -1,35 +1,25 @@
-# ============================
-# BUILD STAGE
-# ============================
+# BUILD
 FROM eclipse-temurin:21-jdk AS build
-
 WORKDIR /app
 
-# Copia o Maven wrapper + config
+# Maven wrapper
 COPY mvnw .
 COPY .mvn .mvn
-
-# Dá permissão ao Maven wrapper
 RUN chmod +x mvnw
 
-# Copia o código fonte
+# Fonte
 COPY pom.xml .
 COPY src src
 
-# Compila o projeto
+# Build
 RUN ./mvnw -q -DskipTests package
 
-# ============================
-# RUNTIME STAGE
-# ============================
+# RUNTIME
 FROM eclipse-temurin:21-jre
-
 WORKDIR /app
 
-# Copia o JAR gerado no stage anterior
 COPY --from=build /app/target/*.jar app.jar
 
-EXPOSE 3003
+EXPOSE 3000
 
-# Ativa automaticamente o profile "docker" quando rodar no Docker
-ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=docker"]
+ENTRYPOINT ["java","-jar","app.jar"]

@@ -12,11 +12,10 @@ public class WebClientConfig {
     public WebClient simulatorWebClient(Environment env) {
         String base = env.getProperty("simulator.base-url");
 
-        if (base == null) {
+        if (base == null || base.isBlank()) {
             throw new IllegalStateException("simulator.base-url is not configured!");
         }
 
         return WebClient.builder().baseUrl(base).build();
     }
-
 }
