@@ -1,14 +1,13 @@
-# 🚗 Parking Manager – Sistema de Gerenciamento de Estacionamento
-Sistema completo para gerenciamento de garagem, incluindo controle de entrada, saída, monitoramento em tempo real e integração via Webhook com o simulador de garagem **garage-sim**.
-
-Este projeto utiliza:
+# 🚗 Parking Manager – Parking Management
+System Complete system for garage management, including entry control, exit, real-time monitoring and integration via Webhook with the garage simulator **garage-sim**.
+This project uses:
 
 - **Java 21**
 - **Spring Boot 3.5**
 - **MySQL 8**
 - **Docker & Docker Compose**
 - **Maven**
-- **Comunicação assíncrona via Webhook**
+- **Asynchronous communication via Webhook**
 
 ---
 

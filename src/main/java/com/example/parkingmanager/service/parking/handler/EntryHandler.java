@@ -35,7 +35,6 @@ public class EntryHandler implements WebhookEventHandler {
     public void handle(WebhookEventDto dto) {
         var res = allocationService.allocateSpot();
         if (!res.success()) {
-            // no spot available - ignore (simulator expects 200)
             return;
         }
         var sector = res.sector();

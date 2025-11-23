@@ -10,9 +10,9 @@ public class WebhookController {
     @PostMapping({"/simulate", "/webhook"})
     public ResponseEntity<String> handleWebhook(@RequestBody WebhookEventDto event) {
 
-        System.out.println("🔥 EVENTO RECEBIDO DO SIMULADOR:");
+        System.out.println("EVENT RECEIVED FROM THE SIMULATOR: ");
         System.out.println(event);
 
-        return ResponseEntity.ok("Webhook recebido com sucesso");
+        return ResponseEntity.ok("Webhook successfully received");
     }
 }

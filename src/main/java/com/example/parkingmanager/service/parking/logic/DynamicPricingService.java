@@ -31,7 +31,7 @@ public class DynamicPricingService {
         } else {
             base = base.multiply(BigDecimal.valueOf(1.25));
         }
-        // arredonda para cima (integer)
+
         return base.setScale(0, RoundingMode.CEILING);
     }
 }

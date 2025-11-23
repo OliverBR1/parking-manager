@@ -3,7 +3,7 @@ services:
     image: cfontes0estapar/garage-sim:1.0.0
     container_name: garage-simulator
     ports:
-      - "3003:3000"    # ← simulador roda na porta 3000 INTERNAMENTE
+      - "3003:3000"
     networks:
       - parking-net
 
@@ -17,7 +17,6 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: admin123
 
-      # CORRETO → baseURL apontando para a porta interna REAL do simulador
       SIMULATOR_BASE_URL: http://garage-simulator:3000
     depends_on:
       - parking-mysql
