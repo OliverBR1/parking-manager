@@ -4,5 +4,6 @@ import com.example.parkingmanager.dto.WebhookEventDto;
 
 public interface WebhookEventHandler {
     boolean supports(String eventType);
+
     void handle(WebhookEventDto dto);
 }

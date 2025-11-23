@@ -23,4 +23,5 @@ public record WebhookEventDto(
 
         @JsonProperty("event_type")
         String eventType
-) {}
+) {
+}

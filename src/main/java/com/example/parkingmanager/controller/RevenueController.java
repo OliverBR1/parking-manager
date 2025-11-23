@@ -17,7 +17,6 @@ public class RevenueController {
         this.revenueService = revenueService;
     }
 
-    // Supports GET with JSON body (simulator requirement) or query params
     @GetMapping("/revenue")
     public ResponseEntity<?> revenue(
             @RequestParam(required = false) String sector,
@@ -39,6 +38,11 @@ public class RevenueController {
         return ResponseEntity.ok(resp);
     }
 
-    public static class RevenueRequest { public String date; public String sector; }
-    public static record RevenueResponse(BigDecimal amount, String currency, Instant timestamp){}
+    public static class RevenueRequest {
+        public String date;
+        public String sector;
+    }
+
+    public static record RevenueResponse(BigDecimal amount, String currency, Instant timestamp) {
+    }
 }

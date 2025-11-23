@@ -3,7 +3,7 @@ services:
     image: cfontes0estapar/garage-sim:1.0.0
     container_name: garage-simulator
     ports:
-      - "3004:3000"   # Simulador agora roda na 3000 interna → 3004 externa
+      - "3004:3000"
     networks:
       - parking-net
 

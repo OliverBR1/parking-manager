@@ -20,7 +20,8 @@ public class SpotAllocationService {
         this.sectorRepo = sectorRepo;
     }
 
-    public record AllocationResult(boolean success, SectorEntity sector, SpotEntity spot) {}
+    public record AllocationResult(boolean success, SectorEntity sector, SpotEntity spot) {
+    }
 
     @Transactional
     public AllocationResult allocateSpot() {

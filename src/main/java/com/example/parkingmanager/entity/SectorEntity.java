@@ -1,6 +1,7 @@
 package com.example.parkingmanager.entity;
 
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -16,7 +17,8 @@ public class SectorEntity {
     @Column(nullable = false)
     private int maxCapacity;
 
-    public SectorEntity() {}
+    public SectorEntity() {
+    }
 
     public SectorEntity(String name, BigDecimal basePrice, int maxCapacity) {
         this.name = name;
@@ -24,10 +26,27 @@ public class SectorEntity {
         this.maxCapacity = maxCapacity;
     }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public BigDecimal getBasePrice() { return basePrice; }
-    public void setBasePrice(BigDecimal basePrice) { this.basePrice = basePrice; }
-    public int getMaxCapacity() { return maxCapacity; }
-    public void setMaxCapacity(int maxCapacity) { this.maxCapacity = maxCapacity; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public BigDecimal getBasePrice() {
+        return basePrice;
+    }
+
+    public void setBasePrice(BigDecimal basePrice) {
+        this.basePrice = basePrice;
+    }
+
+    public int getMaxCapacity() {
+        return maxCapacity;
+    }
+
+    public void setMaxCapacity(int maxCapacity) {
+        this.maxCapacity = maxCapacity;
+    }
 }
