@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class WebhookController {
 
-    @PostMapping({"/simulate", "/webhook"})
+    @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(@RequestBody WebhookEventDto event) {
 
-        System.out.println("EVENT RECEIVED FROM THE SIMULATOR: ");
+        System.out.println("EVENT RECEIVED FROM THE WEBHOOK: ");
         System.out.println(event);
 
         return ResponseEntity.ok("Webhook successfully received");
