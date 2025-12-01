@@ -32,9 +32,4 @@ public class RevenueController {
         return ResponseEntity.ok(mock);
     }
 
-    @PostMapping
-    public ResponseEntity<RevenueResponse> revenue(@Valid @RequestBody RevenueFilter request) {
-        RevenueResponse response = revenueFacade.execute(request);
-        return ResponseEntity.ok(response);
-    }
 }
