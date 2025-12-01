@@ -1,48 +1,40 @@
 package com.example.parkingmanager.controller;
 
-import com.example.parkingmanager.service.parking.logic.RevenueService;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.example.parkingmanager.dto.RevenueFilter;
+import com.example.parkingmanager.dto.RevenueResponse;
+import com.example.parkingmanager.service.parking.logic.RevenueFacade;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.*;
+import java.time.Instant;
 
 @RestController
+@RequestMapping("/revenue")
 public class RevenueController {
 
-    private final RevenueService revenueService;
+    private final RevenueFacade revenueFacade;
 
-    public RevenueController(RevenueService revenueService) {
-        this.revenueService = revenueService;
+    public RevenueController(RevenueFacade revenueFacade) {
+        this.revenueFacade = revenueFacade;
     }
 
-    @GetMapping("/revenue")
-    public ResponseEntity<?> revenue(
-            @RequestParam(required = false) String sector,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
-            @RequestBody(required = false) RevenueRequest body
-    ) {
-        if (body != null) {
-            sector = body.sector;
-            if (body.date != null && date == null) date = LocalDate.parse(body.date);
-        }
-        if (sector == null || date == null) {
-            return ResponseEntity.badRequest().body("Required: sector and date (yyyy-MM-dd)");
-        }
-        Instant from = date.atStartOfDay(ZoneOffset.UTC).toInstant();
-        Instant to = date.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();
+    @GetMapping
+    public ResponseEntity<RevenueResponse> getRevenue(@Valid @RequestBody RevenueFilter request) {
 
-        BigDecimal amount = revenueService.calculate(sector, from, to);
-        var resp = new RevenueResponse(amount.setScale(2, BigDecimal.ROUND_HALF_UP), "BRL", Instant.now());
-        return ResponseEntity.ok(resp);
+        RevenueResponse mock = new RevenueResponse(
+                new BigDecimal("0.00"),
+                "BRL",
+                Instant.parse("2025-01-01T12:00:00.000Z")
+        );
+
+        return ResponseEntity.ok(mock);
     }
 
-    public static class RevenueRequest {
-        public String date;
-        public String sector;
-    }
-
-    public static record RevenueResponse(BigDecimal amount, String currency, Instant timestamp) {
+    @PostMapping
+    public ResponseEntity<RevenueResponse> revenue(@Valid @RequestBody RevenueFilter request) {
+        RevenueResponse response = revenueFacade.execute(request);
+        return ResponseEntity.ok(response);
     }
 }
