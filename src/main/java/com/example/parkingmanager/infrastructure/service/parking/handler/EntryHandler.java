@@ -3,6 +3,8 @@ package com.example.parkingmanager.infrastructure.service.parking.handler;
 import com.example.parkingmanager.application.dto.WebhookEventDto;
 import com.example.parkingmanager.application.gateway.input.WebhookEventHandler;
 import com.example.parkingmanager.domain.entity.ParkingSessionEntity;
+import com.example.parkingmanager.domain.entity.SectorEntity;
+import com.example.parkingmanager.domain.entity.SpotEntity;
 import com.example.parkingmanager.infrastructure.service.parking.logic.DynamicPricingService;
 import com.example.parkingmanager.infrastructure.service.parking.logic.SpotAllocationService;
 import com.example.parkingmanager.infrastructure.repository.ParkingSessionRepository;
@@ -34,25 +36,37 @@ public class EntryHandler implements WebhookEventHandler {
 
     @Override
     public void handle(WebhookEventDto dto) {
-        var res = allocationService.allocateSpot();
-        if (!res.success()) {
+
+        SpotAllocationService.AllocationResult allocationResult = allocationService.allocateSpot();
+        if (!allocationResult.success()) {
             return;
         }
-        var sector = res.sector();
-        var spot = res.spot();
 
-        BigDecimal price = pricingService.calculatePrice(sector);
+        SectorEntity allocatedSector = allocationResult.sector();
+        SpotEntity allocatedSpot = allocationResult.spot();
+
+        BigDecimal hourlyPrice = pricingService.calculatePrice(allocatedSector);
+
+        String licensePlate = dto.licensePlate();
+        String entryTimestampRaw = dto.entryTime();
+
+        Instant entryTimestamp = parseEntryTimestamp(entryTimestampRaw);
 
         ParkingSessionEntity session = new ParkingSessionEntity();
-        session.setLicensePlate(dto.licensePlate());
-        session.setSector(sector.getName());
-        session.setSpot(spot);
-        try {
-            session.setEntryTime(Instant.parse(dto.entryTime()));
-        } catch (DateTimeParseException e) {
-            session.setEntryTime(Instant.now());
-        }
-        session.setPricePerHour(price);
+        session.setLicensePlate(licensePlate);
+        session.setSector(allocatedSector.getName());
+        session.setSpot(allocatedSpot);
+        session.setEntryTime(entryTimestamp);
+        session.setPricePerHour(hourlyPrice);
+
         sessionRepo.save(session);
+    }
+
+    private Instant parseEntryTimestamp(String timestamp) {
+        try {
+            return Instant.parse(timestamp);
+        } catch (DateTimeParseException e) {
+            return Instant.now();
+        }
     }
 }
